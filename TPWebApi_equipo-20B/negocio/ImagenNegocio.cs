@@ -1,14 +1,7 @@
-﻿using dominio;
-using negocio;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using dominio;
 
 namespace negocio
 {
@@ -27,14 +20,12 @@ namespace negocio
 
                 while (datos.Lector.Read())
                 {
-                    Imagen img = new Imagen();
-                    img.IdImagen = (int)datos.Lector["Id"];
-                    img.IdArticulo = (int)datos.Lector["IdArticulo"];
-
-                    if (!(datos.Lector["ImagenUrl"] is DBNull))
-                        img.UrlImagen = (string)datos.Lector["ImagenUrl"];
-                    else
-                        img.UrlImagen = "";
+                    Imagen img = new Imagen
+                    {
+                        IdImagen = (int)datos.Lector["Id"],
+                        IdArticulo = (int)datos.Lector["IdArticulo"],
+                        UrlImagen = !(datos.Lector["ImagenUrl"] is DBNull) ? (string)datos.Lector["ImagenUrl"] : ""
+                    };
 
                     lista.Add(img);
                 }
@@ -81,6 +72,33 @@ namespace negocio
                 datos.CerrarConexion();
             }
         }
+
+        public void AgregarImagenes(int idArticulo, IEnumerable<string> urls)
+        {
+            if (urls == null) return;
+
+            var limpias = urls
+                .Where(u => !string.IsNullOrWhiteSpace(u))
+                .Select(u => u.Trim())
+                .ToList();
+
+            if (limpias.Count == 0) return;
+
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                foreach (var url in limpias)
+                {
+                    datos.setearConsulta("INSERT INTO IMAGENES (IdArticulo, ImagenUrl) VALUES (@id, @url)");
+                    datos.setearParametro("@id", idArticulo);
+                    datos.setearParametro("@url", url);
+                    datos.ejecutarAccion();
+                }
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
     }
 }
-
