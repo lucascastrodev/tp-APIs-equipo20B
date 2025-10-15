@@ -132,7 +132,32 @@ namespace api_producto.Controllers
         [HttpPut, Route("{id:int}")]
         public void Put(int id, [FromBody] string value) { }
 
+
+
         [HttpDelete, Route("{id:int}")]
-        public void Delete(int id) { }
+        public IHttpActionResult Delete(int id)
+        {
+            try
+            {
+                var negocio = new ArticuloNegocio();
+                var lista = negocio.listar();
+                var articulo = lista.Find(a => a.idArticulo == id);
+
+                if (articulo == null)
+                    return NotFound(); 
+
+                negocio.eliminar(id);
+
+                return Ok(new { message = "Artículo eliminado correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return Content(HttpStatusCode.InternalServerError, new
+                {
+                    message = "Error al eliminar el artículo.",
+                    detail = ex.Message
+                });
+            }
+        }
     }
 }
