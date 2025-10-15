@@ -91,14 +91,13 @@ namespace api_producto.Controllers
             }
         }
 
-        
+
         [HttpPost, Route("{id:int}/imagenes")]
         public IHttpActionResult AgregarImagenes(int id, [FromBody] ArticuloAddImagesDto dto)
         {
             if (dto == null || dto.Imagenes == null || dto.Imagenes.Count == 0)
                 return BadRequest("Debe enviar al menos una imagen.");
 
-           
             var artSrv = new ArticuloNegocio();
             var existe = artSrv.listar().Any(a => a.idArticulo == id);
             if (!existe) return NotFound();
@@ -106,8 +105,17 @@ namespace api_producto.Controllers
             try
             {
                 var imgSrv = new ImagenNegocio();
-                imgSrv.AgregarImagenes(id, dto.Imagenes);
-                return StatusCode(HttpStatusCode.NoContent); 
+
+                foreach (var url in dto.Imagenes)
+                {
+                    imgSrv.agregar(new Imagen
+                    {
+                        IdArticulo = id,
+                        UrlImagen = url
+                    });
+                }
+
+                return StatusCode(HttpStatusCode.NoContent); // 204
             }
             catch (Exception ex)
             {
@@ -119,7 +127,8 @@ namespace api_producto.Controllers
             }
         }
 
-        
+
+
         [HttpPut, Route("{id:int}")]
         public void Put(int id, [FromBody] string value) { }
 

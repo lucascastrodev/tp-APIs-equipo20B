@@ -34,6 +34,8 @@ namespace negocio
                     aux.Marca.IdMarca = (int)datos.Lector["IdMarca"];
                     aux.Precio = (decimal)datos.Lector["Precio"];
 
+                    aux.Imagenes = imagenNegocio.listarPorArticulo(aux.idArticulo);
+
                     lista.Add(aux);
                 }
 
