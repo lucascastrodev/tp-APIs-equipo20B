@@ -5,7 +5,7 @@ namespace api_producto.Models
 {
     public class ArticuloAddImagesDto
     {
-        [Required, MinLength(1)]
+        [Required]
         public List<string> Imagenes { get; set; }
     }
 }

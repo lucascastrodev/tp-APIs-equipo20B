@@ -143,7 +143,7 @@ namespace api_producto.Controllers
                     return Content(HttpStatusCode.BadRequest, "No se agregaron imágenes porque ya existían o eran inválidas.");
 
                 
-                return Content(HttpStatusCode.NoContent, new
+                return Ok( new
                 {
                     agregadas = nuevas.Count,
                     duplicadas = duplicadas.Count
