@@ -160,6 +160,7 @@
     </Compile>
     <Compile Include="Models\ArticuloAddImagesDto.cs" />
     <Compile Include="Models\ArticuloCreateDto.cs" />
+    <Compile Include="Models\ArticuloUpdateDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
